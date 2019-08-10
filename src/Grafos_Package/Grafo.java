@@ -36,14 +36,14 @@ public abstract class Grafo {
         if (!this.validaVertice(identificador)) {
             this.identificadoresVertices.add(identificador);
             /*
-        Este for inicial e utilizado para adicionarmos o valor 0 no final de cada vetor da matriz de adjacencia, assim permitindo 
-        que posteriormente seja possivel a adicao de uma aresta para o novo vertice a ser inserido.
+            Este for inicial e utilizado para adicionarmos o valor 0 no final de cada vetor da matriz de adjacencia, assim permitindo 
+            que posteriormente seja possivel a adicao de uma aresta para o novo vertice a ser inserido.
              */
             for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
                 this.matrizDeAdjacencia.get(i).add(0);
             }
             /*Posteriormente Sera Adicionado na matriz de adjacencia, o novo vetor que ira representar as arestas do novo vertice,
-        sendo estas, previamente iniciadas com peso 0*/
+            sendo estas, previamente iniciadas com peso 0*/
             ArrayList<Integer> novoVertice = new ArrayList<Integer>();
             int quantidadeTotalDeVertices = this.matrizDeAdjacencia.size();
             for (int i = 0; i < quantidadeTotalDeVertices + 1; i++) {
@@ -55,7 +55,28 @@ public abstract class Grafo {
         return false;
     }
 
+    protected boolean removeVertice(String identificador) {
+        if (this.validaVertice(identificador)) {
+            int posicaoDoVerticeASerRemovido = this.posicaoDoVertice(identificador);
+            this.identificadoresVertices.remove(posicaoDoVerticeASerRemovido);
+            /*
+            Este for sera utilizado para removermos todas as posicoes dos vertices da matriz, 
+            que representem uma possivel ligacao ao vertice que venha a ser removido
+             */
+            for (int i = 0;i < this.matrizDeAdjacencia.size();i++){
+                this.matrizDeAdjacencia.get(i).remove(posicaoDoVerticeASerRemovido);
+            }
+            //Posteriormente sera removido da matriz de adjacencia o vetor que representa o vertice a ser removido
+            this.matrizDeAdjacencia.remove(posicaoDoVerticeASerRemovido);
+            return true;
+        }else{
+            return false;
+        }
+    }
+
     protected abstract boolean adicionaAresta(String identificador1, String identificador2, int peso);
+
+    protected abstract boolean removeAresta(String identificador1, String identificador2);
 
     //Verifica se aquele vertice realmente existe no Grafo
     protected boolean validaVertice(String identificadorVertice) {

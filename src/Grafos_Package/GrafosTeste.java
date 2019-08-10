@@ -56,7 +56,8 @@ public class GrafosTeste {
                 }
             } else {
                 System.out.println("-----------------------------Menu De Metodos----------------------------");
-                System.out.println("1 - Cadastro De Novo Grafo \n2 - Adicionar Vertice \n3 - Adicionar Aresta \n4 - Printar Grafo \n0 - Finaliza o programa");
+                System.out.println("1 - Cadastro De Novo Grafo \n2 - Adicionar Vertice \n3 - Remove Vertice \n4 - Adicionar Aresta \n5 -Remove Aresta"
+                        + "\n6 - Printar Grafo \n0 - Finaliza o programa");
                 respostaMenuPrincipal = scan.nextInt();
                 switch (respostaMenuPrincipal) {
                     case (0):
@@ -64,15 +65,23 @@ public class GrafosTeste {
                     case (1):
                         grafoAtual = null;
                         break;
-                    case(2):
+                    case (2):
                         System.out.println("Digite o nome do vertice a ser adicionado:");
-                        String identificador = scan.next();
-                        boolean validadorVertice = grafoAtual.adicionaVertice(identificador);
-                        if (!validadorVertice){
+                        String identificadorNovo = scan.next();
+                        boolean validadorVerticeAdicionado = grafoAtual.adicionaVertice(identificadorNovo);
+                        if (!validadorVerticeAdicionado) {
                             System.out.println("Vertice ja existente no grafo!");
                         }
                         break;
                     case (3):
+                        System.out.println("Digite o nome do vertice a ser removido:");
+                        String indentificadorVerticeRemovido = scan.next();
+                        boolean validadorVerticeRemovido = grafoAtual.removeVertice(indentificadorVerticeRemovido);
+                        if (!validadorVerticeRemovido) {
+                            System.out.println("Indentificador Invalido!");
+                        }
+                        break;
+                    case (4):
                         System.out.println("Aresta Saindo Do Vertice: ");
                         String vertice1 = scan.next();
                         System.out.println("Chegando no vertice: ");
@@ -84,7 +93,17 @@ public class GrafosTeste {
                             System.out.println("Aresta nao adicionada devido a valores invalidos!");
                         }
                         break;
-                    case (4):
+                    case (5):
+                        System.out.println("Aresta a ser removida sai do Vertice: ");
+                        String vertice1Remove = scan.next();
+                        System.out.println("Aresta a ser removida chega no vertice: ");
+                        String vertice2Remove = scan.next();
+                        boolean validadorArestaRemovida = grafoAtual.removeAresta(vertice1Remove, vertice2Remove);
+                        if (!validadorArestaRemovida) {
+                            System.out.println("Aresta nao removida devido a valores invalidos!");
+                        }
+                        break;
+                    case (6):
                         grafoAtual.printarGrafo();
                         break;
                     default:
