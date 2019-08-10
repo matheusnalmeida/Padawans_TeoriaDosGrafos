@@ -82,6 +82,11 @@ public abstract class Grafo {
     protected boolean validaVertice(String identificadorVertice) {
         return this.identificadoresVertices.contains(identificadorVertice);
     }
+    
+    //Verifica se aquela determinada aresta existe no grafo 
+    protected boolean validaAresta(int posicaoDoVertice1,int posicaoDoVertice2){
+        return this.matrizDeAdjacencia.get(posicaoDoVertice1).get(posicaoDoVertice2) != 0;
+    }
 
     //Verifica se o peso informado possui um valor valido
     protected boolean validaPeso(int peso) {

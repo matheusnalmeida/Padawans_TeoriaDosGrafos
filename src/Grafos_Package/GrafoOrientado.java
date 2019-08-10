@@ -34,8 +34,12 @@ public class GrafoOrientado extends Grafo {
         if ((super.validaVertice(identificador1)) && (super.validaVertice(identificador2))) {
             int posicaoDoVertice1 = super.posicaoDoVertice(identificador1);
             int posicaoDoVertice2 = super.posicaoDoVertice(identificador2);
-            super.matrizDeAdjacencia.get(posicaoDoVertice1).set(posicaoDoVertice2, 0);
-            return true;
+            //Verificando se a aresta realmente existe
+            if (super.validaAresta(posicaoDoVertice1, posicaoDoVertice2)){
+                super.matrizDeAdjacencia.get(posicaoDoVertice1).set(posicaoDoVertice2, 0);
+                return true;
+            }
+            return false;
         } else {
             return false;
         }
