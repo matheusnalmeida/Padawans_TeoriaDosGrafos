@@ -5,33 +5,61 @@
  */
 package Grafos_Package;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author Matheus Nunes
  */
 public abstract class Grafo {
 
-    int[][] matrizDeAdjacencia;
+    protected ArrayList<String> identificadoresVertices;
+    protected ArrayList<ArrayList<Integer>> matrizDeAdjacencia;
 
-    public Grafo(int numeroDeVertices) {
-        this.matrizDeAdjacencia = new int[numeroDeVertices][numeroDeVertices];
+    public Grafo() {
+        this.matrizDeAdjacencia = new ArrayList<>();
+        this.identificadoresVertices = new ArrayList<>();
     }
 
     public void printarGrafo() {
         System.out.println("Matriz De Adjacencia");
-        for (int[] linha : this.matrizDeAdjacencia) {
-            for (int y : linha) {
-                System.out.print(y + " ");
+        for (ArrayList<Integer> vetorDeArestas : this.matrizDeAdjacencia) {
+            for (int peso : vetorDeArestas) {
+                System.out.print(peso + " ");
             }
             System.out.println();
         }
     }
 
-    public abstract boolean adicionaAresta(int vertice1, int vertice2, int peso);
+    protected boolean adicionaVertice(String identificador) {
+        //Verifica se ja existe um vertice com o identificador especificado. Caso nao exista, o mesmo podera ser adicionado
+        if (!this.validaVertice(identificador)) {
+            this.identificadoresVertices.add(identificador);
+            /*
+        Este for inicial e utilizado para adicionarmos o valor 0 no final de cada vetor da matriz de adjacencia, assim permitindo 
+        que posteriormente seja possivel a adicao de uma aresta para o novo vertice a ser inserido.
+             */
+            for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+                this.matrizDeAdjacencia.get(i).add(0);
+            }
+            /*Posteriormente Sera Adicionado na matriz de adjacencia, o novo vetor que ira representar as arestas do novo vertice,
+        sendo estas, previamente iniciadas com peso 0*/
+            ArrayList<Integer> novoVertice = new ArrayList<Integer>();
+            int quantidadeTotalDeVertices = this.matrizDeAdjacencia.size();
+            for (int i = 0; i < quantidadeTotalDeVertices + 1; i++) {
+                novoVertice.add(0);
+            }
+            this.matrizDeAdjacencia.add(novoVertice);
+            return true;
+        }
+        return false;
+    }
 
-    //Verifica se o vertice pertence a um intervalo valido, retornando true caso pertenca e false caso nao pertenca
-    protected boolean validaVertice(int vertice) {
-        return ((0 <= vertice) && (vertice < this.matrizDeAdjacencia.length));
+    protected abstract boolean adicionaAresta(String identificador1, String identificador2, int peso);
+
+    //Verifica se aquele vertice realmente existe no Grafo
+    protected boolean validaVertice(String identificadorVertice) {
+        return this.identificadoresVertices.contains(identificadorVertice);
     }
 
     //Verifica se o peso informado possui um valor valido
@@ -39,4 +67,8 @@ public abstract class Grafo {
         return peso > 0;
     }
 
+    //Metodo responsavel por retornar a posicao do vertice na matriz de adjacencia
+    protected int posicaoDoVertice(String identificador) {
+        return this.identificadoresVertices.indexOf(identificador);
+    }
 }

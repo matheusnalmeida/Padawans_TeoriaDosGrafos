@@ -11,15 +11,16 @@ package Grafos_Package;
  */
 public class GrafoOrientado extends Grafo {
 
-    public GrafoOrientado(int numeroDeVertices) {
-        super(numeroDeVertices);
+    public GrafoOrientado() {
+        super();
     }
     
     @Override
-    public boolean adicionaAresta(int vertice1, int vertice2, int peso) {
-        //If para checar se ambos os vertices e o peso possuem um valor valido
-        if ((super.validaVertice(vertice1)) && (super.validaVertice(vertice2)) && (super.validaPeso(peso))) {
-            super.matrizDeAdjacencia[vertice1][vertice2] = peso;
+    public boolean adicionaAresta(String identificador1, String identificador2, int peso) {
+        //If para checar se ambos os vertices existem no grafo e se o peso possue um valor valido
+        if ((super.validaVertice(identificador1)) && (super.validaVertice(identificador2)) && (super.validaPeso(peso))) {
+            Integer pesoAresta = peso;
+            super.matrizDeAdjacencia.get(super.posicaoDoVertice(identificador1)).set(super.posicaoDoVertice(identificador2),pesoAresta);
             return true;
         }else{
             return false;
