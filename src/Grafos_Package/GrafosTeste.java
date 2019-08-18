@@ -5,6 +5,7 @@
  */
 package Grafos_Package;
 
+import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
@@ -23,7 +24,6 @@ public class GrafosTeste {
         //A variavel quantidadeDeVerrticesResposta será utilizada para guardar a quantidade de vertices informada pelo usuario.
         //A variavel respostaMenuPrincipal sera utilizada para guardar a opcao do menu selecionada
         int tipoDoGrafoResposta;
-        int quantidadeDeVerrticesResposta;
         int respostaMenuPrincipal;
 
         //A variavel grafoAtual ira representar o grafo que estaram em execucao no momento para ser realizada a analise.
@@ -57,7 +57,7 @@ public class GrafosTeste {
             } else {
                 System.out.println("-----------------------------Menu De Metodos----------------------------");
                 System.out.println("1 - Cadastro De Novo Grafo \n2 - Adicionar Vertice \n3 - Remove Vertice \n4 - Adicionar Aresta \n5 -Remove Aresta"
-                        + "\n6 - Printar Grafo \n0 - Finaliza o programa");
+                        + "\n6 - Retorna Adjacentes \n7 - Printar Grafo  \n0 - Finaliza o programa");
                 respostaMenuPrincipal = scan.nextInt();
                 switch (respostaMenuPrincipal) {
                     case (0):
@@ -104,6 +104,20 @@ public class GrafosTeste {
                         }
                         break;
                     case (6):
+                        System.out.println("Digite o identificador do vertice a ser mostrado os seus adjacentes:");   
+                        String vericeAdjacente = scan.next();
+                        ArrayList<String> vetorDeAdjacentes = grafoAtual.getAdjacentes(vericeAdjacente);
+                        if (vetorDeAdjacentes.isEmpty()){
+                            System.out.println("O vertice nao possui adjacentes");
+                            break;
+                        }
+                        System.out.println("Abaixo seguem os adjacentes do vertice informado:");
+                        for (int i = 0; i < vetorDeAdjacentes.size(); i++) {
+                            System.out.print(vetorDeAdjacentes.get(i) + " | "); 
+                        }
+                        System.out.println();
+                        break;
+                    case (7):
                         grafoAtual.printarGrafo();
                         break;
                     default:

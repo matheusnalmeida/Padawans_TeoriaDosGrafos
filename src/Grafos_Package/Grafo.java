@@ -77,7 +77,23 @@ public abstract class Grafo {
     protected abstract boolean adicionaAresta(String identificador1, String identificador2, int peso);
 
     protected abstract boolean removeAresta(String identificador1, String identificador2);
-
+    
+    //Retorna uma lista de vertices adjacentes ao vertice passado como parametro
+    public ArrayList<String> getAdjacentes(String identificadorVertice){
+        ArrayList<String> listaDeAdjacentes = new ArrayList<>();
+        //Será lancada uma excessão do tipo nullpointer caso o vertice nao exista
+        if (!this.validaVertice(identificadorVertice)){
+            throw new NullPointerException("Vertice nao existente no Grafo");
+        }
+        int vertice = this.posicaoDoVertice(identificadorVertice);
+        for (int i = 0;i < this.matrizDeAdjacencia.get(vertice).size();i++){
+            if (this.matrizDeAdjacencia.get(vertice).get(i) != 0){
+                listaDeAdjacentes.add(this.identificadoresVertices.get(i));
+            }
+        }
+        return listaDeAdjacentes;
+    }
+    
     //Verifica se aquele vertice realmente existe no Grafo
     protected boolean validaVertice(String identificadorVertice) {
         return this.identificadoresVertices.contains(identificadorVertice);
