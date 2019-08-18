@@ -60,7 +60,8 @@ public class GrafoNaoOrientado extends Grafo {
         int grauAtual = 0;
         for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
             for (int j = 0; j < this.matrizDeAdjacencia.get(i).size(); j++) {
-                if (this.matrizDeAdjacencia.get(i).get(j) != 0) {
+                //A condicao i != j do if, ira representar um laço no grafo, sendo que caso o mesmo seja encontrado o programa ira ignoralo
+                if (this.matrizDeAdjacencia.get(i).get(j) != 0 && i != j) {
                     grauAtual++;
                 }
             }

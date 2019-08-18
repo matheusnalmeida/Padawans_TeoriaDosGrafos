@@ -87,6 +87,10 @@ public abstract class Grafo {
         }
         int vertice = this.posicaoDoVertice(identificadorVertice);
         for (int i = 0; i < this.matrizDeAdjacencia.get(vertice).size(); i++) {
+            //O if (vertice == i) ira representar um laço no grafo, sendo que caso o mesmo seja encontrado o programa ira ignoralo
+            if (vertice == i){
+                continue;
+            }
             if (this.matrizDeAdjacencia.get(vertice).get(i) != 0) {
                 listaDeAdjacentes.add(this.identificadoresVertices.get(i));
             }
@@ -96,7 +100,7 @@ public abstract class Grafo {
 
     /*
     A diferenca do metodo ehRegular na classe GrafoOrientado e na classe GrafoNaoOrientado, é simplesmente o fato de que na nao orientado so tera que ser
-    checado aresta de uma unica posicao, já no orientado tera que ser checada a aresta tanto na posicao de entrada e de saida do vertice
+    checado aresta de uma unica posicao, já no orientado tera que ser checada a aresta especificamente na posicao de entrada do vertice
      */
     public abstract boolean ehRegular();
 
