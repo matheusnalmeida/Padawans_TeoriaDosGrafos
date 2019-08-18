@@ -88,7 +88,7 @@ public abstract class Grafo {
         int vertice = this.posicaoDoVertice(identificadorVertice);
         for (int i = 0; i < this.matrizDeAdjacencia.get(vertice).size(); i++) {
             //O if (vertice == i) ira representar um laço no grafo, sendo que caso o mesmo seja encontrado o programa ira ignoralo
-            if (vertice == i){
+            if (vertice == i) {
                 continue;
             }
             if (this.matrizDeAdjacencia.get(vertice).get(i) != 0) {
@@ -103,6 +103,28 @@ public abstract class Grafo {
     checado aresta de uma unica posicao, já no orientado tera que ser checada a aresta especificamente na posicao de entrada do vertice
      */
     public abstract boolean ehRegular();
+
+    //Metodo pare verificar se o grafo eh completo, ou seja, se todos os vertices serao adjacentes a todos os outros
+    public boolean ehCompleto() {
+        /*
+        Neste metodo, o grau de cada vertice sera salvo na variavel grauAtual e sera comparado se o valor do grau de cada vertice é ou nao igual 
+        a quantidade de vertices do grafo - 1, sendo o menos um sera usado pra ignorar o proprio vertice.
+         */
+        int grauAtual = 0;
+        for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+            for (int j = 0; j < this.matrizDeAdjacencia.get(i).size(); j++) {
+                //A condicao i != j do if, ira representar um laço no grafo, sendo que caso o mesmo seja encontrado o programa ira ignoralo
+                if (this.matrizDeAdjacencia.get(i).get(j) != 0 && i != j) {
+                    grauAtual++;
+                }
+            }
+            if (grauAtual != (this.matrizDeAdjacencia.size() - 1)) {
+                return false;
+            }
+            grauAtual = 0;
+        }
+        return true;
+    }
 
     //Verifica se aquele vertice realmente existe no Grafo
     protected boolean validaVertice(String identificadorVertice) {

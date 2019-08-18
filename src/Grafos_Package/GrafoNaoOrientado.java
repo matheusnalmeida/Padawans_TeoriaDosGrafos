@@ -65,6 +65,7 @@ public class GrafoNaoOrientado extends Grafo {
                     grauAtual++;
                 }
             }
+            //Caso grau do primeiro elemento seja -1 isso significa que estamos ainda no primeiro vertice
             if (grauPrimeiroElemento == -1) {
                 grauPrimeiroElemento = grauAtual;
             } else if (grauPrimeiroElemento != grauAtual) {
