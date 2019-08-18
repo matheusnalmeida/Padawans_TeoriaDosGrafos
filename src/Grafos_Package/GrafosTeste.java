@@ -57,7 +57,7 @@ public class GrafosTeste {
             } else {
                 System.out.println("-----------------------------Menu De Metodos----------------------------");
                 System.out.println("1 - Cadastro De Novo Grafo \n2 - Adicionar Vertice \n3 - Remove Vertice \n4 - Adicionar Aresta \n5 -Remove Aresta"
-                        + "\n6 - Retorna Adjacentes \n7 - Printar Grafo  \n0 - Finaliza o programa");
+                        + "\n6 - Retorna Adjacentes \n7 - Verificar Se o Grafo eh Regular \n8 - Printar Grafo  \n0 - Finaliza o programa");
                 respostaMenuPrincipal = scan.nextInt();
                 switch (respostaMenuPrincipal) {
                     case (0):
@@ -79,6 +79,8 @@ public class GrafosTeste {
                         boolean validadorVerticeRemovido = grafoAtual.removeVertice(indentificadorVerticeRemovido);
                         if (!validadorVerticeRemovido) {
                             System.out.println("Indentificador Invalido!");
+                        }else{
+                            System.out.println("Vertice Removido com sucesso");
                         }
                         break;
                     case (4):
@@ -118,6 +120,13 @@ public class GrafosTeste {
                         System.out.println();
                         break;
                     case (7):
+                        if(grafoAtual.ehRegular()){
+                            System.out.println("O grafo e regular!");
+                        }else{
+                            System.out.println("O grafo nao e regular!");
+                        }
+                        break;
+                    case (8):
                         grafoAtual.printarGrafo();
                         break;
                     default:

@@ -63,13 +63,13 @@ public abstract class Grafo {
             Este for sera utilizado para removermos todas as posicoes dos vertices da matriz, 
             que representem uma possivel ligacao ao vertice que venha a ser removido
              */
-            for (int i = 0;i < this.matrizDeAdjacencia.size();i++){
+            for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
                 this.matrizDeAdjacencia.get(i).remove(posicaoDoVerticeASerRemovido);
             }
             //Posteriormente sera removido da matriz de adjacencia o vetor que representa o vertice a ser removido
             this.matrizDeAdjacencia.remove(posicaoDoVerticeASerRemovido);
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -77,30 +77,36 @@ public abstract class Grafo {
     protected abstract boolean adicionaAresta(String identificador1, String identificador2, int peso);
 
     protected abstract boolean removeAresta(String identificador1, String identificador2);
-    
+
     //Retorna uma lista de vertices adjacentes ao vertice passado como parametro
-    public ArrayList<String> getAdjacentes(String identificadorVertice){
+    public ArrayList<String> getAdjacentes(String identificadorVertice) {
         ArrayList<String> listaDeAdjacentes = new ArrayList<>();
         //Será lancada uma excessão do tipo nullpointer caso o vertice nao exista
-        if (!this.validaVertice(identificadorVertice)){
+        if (!this.validaVertice(identificadorVertice)) {
             throw new NullPointerException("Vertice nao existente no Grafo");
         }
         int vertice = this.posicaoDoVertice(identificadorVertice);
-        for (int i = 0;i < this.matrizDeAdjacencia.get(vertice).size();i++){
-            if (this.matrizDeAdjacencia.get(vertice).get(i) != 0){
+        for (int i = 0; i < this.matrizDeAdjacencia.get(vertice).size(); i++) {
+            if (this.matrizDeAdjacencia.get(vertice).get(i) != 0) {
                 listaDeAdjacentes.add(this.identificadoresVertices.get(i));
             }
         }
         return listaDeAdjacentes;
     }
-    
+
+    /*
+    A diferenca do metodo ehRegular na classe GrafoOrientado e na classe GrafoNaoOrientado, é simplesmente o fato de que na nao orientado so tera que ser
+    checado aresta de uma unica posicao, já no orientado tera que ser checada a aresta tanto na posicao de entrada e de saida do vertice
+     */
+    public abstract boolean ehRegular();
+
     //Verifica se aquele vertice realmente existe no Grafo
     protected boolean validaVertice(String identificadorVertice) {
         return this.identificadoresVertices.contains(identificadorVertice);
     }
-    
+
     //Verifica se aquela determinada aresta existe no grafo 
-    protected boolean validaAresta(int posicaoDoVertice1,int posicaoDoVertice2){
+    protected boolean validaAresta(int posicaoDoVertice1, int posicaoDoVertice2) {
         return this.matrizDeAdjacencia.get(posicaoDoVertice1).get(posicaoDoVertice2) != 0;
     }
 
