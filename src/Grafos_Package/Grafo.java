@@ -78,12 +78,12 @@ public abstract class Grafo {
 
     protected abstract boolean removeAresta(String identificador1, String identificador2);
 
-    //Retorna uma lista de vertices adjacentes ao vertice passado como parametro
+    //Retorna uma lista de vertices adjacentes ao passar o identificador do vertice como parametro
     public ArrayList<String> getAdjacentes(String identificadorVertice) {
         ArrayList<String> listaDeAdjacentes = new ArrayList<>();
         //Será lancada uma excessão do tipo nullpointer caso o vertice nao exista
         if (!this.validaVertice(identificadorVertice)) {
-            throw new NullPointerException("Vertice nao existente no Grafo");
+            throw new IllegalArgumentException("Vertice nao existente no Grafo");
         }
         int vertice = this.posicaoDoVertice(identificadorVertice);
         for (int i = 0; i < this.matrizDeAdjacencia.get(vertice).size(); i++) {
@@ -98,32 +98,66 @@ public abstract class Grafo {
         return listaDeAdjacentes;
     }
 
+    //Retorna uma lista de vertices adjacentes ao passar a posicao do vertice na matriz como parametro 
+    protected ArrayList<Integer> getAdjacentes(int posicaoDoVerticeMatriz) {
+        ArrayList<Integer> listaDeAdjacentes = new ArrayList<>();
+        //Será lancada uma excessão do tipo IllegalArgumentException caso a posicao na matriz informada seja invalida
+        if (0 <= posicaoDoVerticeMatriz && posicaoDoVerticeMatriz < this.matrizDeAdjacencia.size()) {
+            for (int i = 0; i < this.matrizDeAdjacencia.get(posicaoDoVerticeMatriz).size(); i++) {
+                //O if (vertice == i) ira representar um laço no grafo, sendo que caso o mesmo seja encontrado, o programa ira ignoralo
+                if (posicaoDoVerticeMatriz == i) {
+                    continue;
+                }
+                if (this.matrizDeAdjacencia.get(posicaoDoVerticeMatriz).get(i) != 0) {
+                    listaDeAdjacentes.add(i);
+                }
+            }
+            return listaDeAdjacentes;
+        }
+        throw new IllegalArgumentException("Posicao Invalida!");
+    }
+
     /*
-    A diferenca do metodo ehRegular na classe GrafoOrientado e na classe GrafoNaoOrientado, é simplesmente o fato de que na nao orientado so tera que ser
-    checado aresta de uma unica posicao, já no orientado tera que ser checada a aresta especificamente na posicao de entrada do vertice
+    A diferenca do metodo ehRegular na classe GrafoOrientado e na classe GrafoNaoOrientado, é simplesmente o fato de que na nao orientado so tera que 
+    ser checada a aresta de uma unica posicao, já no orientado tera que ser checada a aresta especificamente na posicao de entrada no vertice, ou seja, 
+    grau de entrada.
      */
     public abstract boolean ehRegular();
 
     //Metodo pare verificar se o grafo eh completo, ou seja, se todos os vertices serao adjacentes a todos os outros
     public boolean ehCompleto() {
         /*
-        Neste metodo, o grau de cada vertice sera salvo na variavel grauAtual e sera comparado se o valor do grau de cada vertice é ou nao igual 
-        a quantidade de vertices do grafo - 1, sendo o menos um sera usado pra ignorar o proprio vertice.
+        Neste metodo, a quatidade de vertices adjacentes do vertice atual serao salvo na variavel verticeAdjacente e sera comparado se a quantidade 
+        de adjacentes de cada vertice é ou nao igual a quantidade de vertices do grafo - 1, sendo que o menos um, sera usado para ignorar o proprio 
+        vertice.
          */
-        int grauAtual = 0;
+        int verticeAdjacente = 0;
         for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
-            for (int j = 0; j < this.matrizDeAdjacencia.get(i).size(); j++) {
-                //A condicao i != j do if, ira representar um laço no grafo, sendo que caso o mesmo seja encontrado o programa ira ignoralo
-                if (this.matrizDeAdjacencia.get(i).get(j) != 0 && i != j) {
-                    grauAtual++;
-                }
-            }
-            if (grauAtual != (this.matrizDeAdjacencia.size() - 1)) {
+            verticeAdjacente = this.getAdjacentes(i).size();
+            if (verticeAdjacente != (this.matrizDeAdjacencia.size() - 1)) {
                 return false;
             }
-            grauAtual = 0;
         }
         return true;
+    }
+
+    /*
+    A diferenca do metodo ehConexo na classe grafo nao orientado e na classe grafo orientado, e simplesmente o fato de que na nao orientado, so sera ne-
+    cessario checar as arestas a partir de um dos vertices da mesma, ja nos orientados sera checado se entre dois vertices, existe uma aresta ou indo
+    ou voltando, tendo em conta que o direcionamento das arestas nao importa para sabermos se o digrafo e fracamente conexo.
+     */
+    public abstract String ehConexo();
+
+    //Retorna um determinado vertice que ainda nao foi explorado de acordo com o vetor de explorados passado como parametro
+    public int getVerticeNaoExplorado(ArrayList<Integer> vetorDeExplorados) {
+        int verticeNaoVisitado = -1;
+        for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+            if (!vetorDeExplorados.contains(i)) {
+                verticeNaoVisitado = i;
+                break;
+            }
+        }
+        return verticeNaoVisitado;
     }
 
     //Verifica se aquele vertice realmente existe no Grafo

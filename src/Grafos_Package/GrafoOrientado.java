@@ -5,6 +5,10 @@
  */
 package Grafos_Package;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+
 /**
  *
  * @author Matheus Nunes
@@ -45,7 +49,7 @@ public class GrafoOrientado extends Grafo {
         }
     }
 
-    //Metodo para verificar se o grafo nao dirigido é regular ou não, sendo regular quanto todos os vertices do grafo possuem o mesmo grau
+    //Metodo para verificar se o grafo orientado é regular ou não, sendo regular quando todos os vertices do grafo possuem o mesmo grau
     @Override
     public boolean ehRegular() {
         /*
@@ -71,5 +75,51 @@ public class GrafoOrientado extends Grafo {
             grauAtual = 0;
         }
         return true;
+    }
+
+    //Descobrir se o grafo e fracamente conexo ,ou seja, se todos os vertices sao adjacentes entre si
+    @Override
+    public String ehConexo() {
+        StringBuilder construtorString = new StringBuilder();
+        /*
+        Foi utilizada a busca em largura para descobrir se o grafo e fracamente conexo e para descobrir quantos 
+        componentes fracamente conexos o mesmo possui
+         */
+        ArrayList<Integer> vetorDeExplorados = new ArrayList<>();
+        Queue<Integer> fila = new LinkedList<>();
+        Boolean[] visitados = new Boolean[this.matrizDeAdjacencia.size()];
+        int contadorDeElementosConexos = 0;
+        int verticeAtual;
+        //Iniciando vetor de visitados com false
+        for (int i = 0; i < visitados.length; i++) {
+            visitados[i] = false;
+        }
+
+        while (vetorDeExplorados.size() != this.matrizDeAdjacencia.size()) {
+            verticeAtual = this.getVerticeNaoExplorado(vetorDeExplorados);
+            visitados[verticeAtual] = true;
+            fila.add(verticeAtual);
+            contadorDeElementosConexos++;
+            while (!fila.isEmpty()) {
+                verticeAtual = fila.poll();
+                vetorDeExplorados.add(verticeAtual);
+                //Retornando os adjacente e inserindo na fila
+                for (int i = 0; i < this.matrizDeAdjacencia.get(verticeAtual).size(); i++) {
+                    //Nao importa o direcionamento das arestas para fracamente conexo em digrafos
+                    if ((this.matrizDeAdjacencia.get(verticeAtual).get(i) != 0 || this.matrizDeAdjacencia.get(i).get(verticeAtual) != 0)
+                            && (visitados[i] == false)) {
+                        visitados[i] = true;
+                        fila.add(i);
+                    }
+                }
+            }
+        }
+        if (contadorDeElementosConexos == 1) {
+            construtorString.append("O grafo eh conexo!");
+            return construtorString.toString();
+        } else {
+            construtorString.append("O grafo nao e conexo e possui ").append(contadorDeElementosConexos).append(" elementos conexos");
+            return construtorString.toString();
+        }
     }
 }
