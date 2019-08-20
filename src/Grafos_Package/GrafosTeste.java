@@ -58,7 +58,8 @@ public class GrafosTeste {
                 System.out.println("-----------------------------Menu De Metodos----------------------------");
                 System.out.println("1 - Cadastro De Novo Grafo \n2 - Adicionar Vertice \n3 - Remove Vertice \n4 - Adicionar Aresta \n5 - Remove Aresta"
                         + "\n6 - Retorna Adjacentes \n7 - Verificar Se o Grafo eh Regular \n8 - Verificar se o grafo eh completo"
-                        + "\n9 - Verificar se o grafo eh conexo \n10 - Printar Grafo  \n0 - Finaliza o programa");
+                        + "\n9 - Verificar se o grafo eh conexo \n10 - Dikstra de um vertice para todos os outros \n11 - Printar Grafo  "
+                        + "\n0 - Finaliza o programa");
                 respostaMenuPrincipal = scan.nextInt();
                 switch (respostaMenuPrincipal) {
                     case (0):
@@ -138,6 +139,11 @@ public class GrafosTeste {
                         System.out.println(grafoAtual.ehConexo());
                         break;
                     case (10):
+                        System.out.println("Informe o vertice a ser analisado:");
+                        String verticeRespostaDijkstra = scan.next();
+                        System.out.println(grafoAtual.Dijkstra(verticeRespostaDijkstra));
+                        break;
+                    case (11):
                         grafoAtual.printarGrafo();
                         break;
                     default:
