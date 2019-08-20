@@ -31,6 +31,18 @@ Ao ser executado pela primeira vez, o programa ira pedir para que o usuario info
 
 5 - Remove Aresta = Permite que o usuario remova uma aresta informando os identificadores de ambos os vertices que a mesma esta conectada,
 
-6 - Printar Grafo = Demonstra a representacao do grafo na forma de matriz de adjacencia.
+6 - Retornar Adjacentes = Permite retornar os adjacentes de um determinado vertice informado.
+
+7 - Verificar Se o Grafo eh Regular = Retorna ao usuario se o Grafo feito é K-Regular(Vertices com o mesmo grau).
+
+8 - Verificar se o grafo eh completo = Retorna ao usuario se o Grafo feito é Completo(Todos os vertices se ligam).
+
+9 - Verificar se o grafo eh conexo = Retorna ao usuario se o Grafo feito é Conexo ou Desconexo.
+
+10 - Dijkstra de um vertice para todos os outros  = Permite o usuario saber o menor caminho de um vertice informado a todos os outros.
+
+11 - Dijkstra de um vertice para outro especifico = Permite o usuario saber o menor caminho entre dois vertices especificados.
+
+12 - Printar Grafo = Mostra ao usuario a matriz adjacencia do Grafo passsado.
 
 0 - Finaliza o Programa = Finaliza a execucao do programa.
