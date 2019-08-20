@@ -187,7 +187,7 @@ public abstract class Grafo {
             //Primeiro for responsavel por atualizar os pesos de acordo com a menor distancia no vetor de distancias
             for (int i = 0; i < this.matrizDeAdjacencia.get(verticeAtual).size(); i++) {
                 //Ignora o laco
-                if (i == verticeAtual){
+                if (i == verticeAtual) {
                     continue;
                 }
                 //Checa se um dado vertice ainda nao visitado e adjacente ao vertice atual, possui uma distancia ate ele menor do que a ja existente
@@ -211,6 +211,79 @@ public abstract class Grafo {
             }
         }
         return this.tracarCaminhoParatodosOsVertices(vetorDeDistancias, path, verticeOrigem);
+    }
+
+    //Dijkstra para calcular a menos distancia de um vertice para outro
+    public String Dijkstra(String identificadorVerticeOrigem, String identificadorVerticeDestino) {
+        if (!this.validaVertice(identificadorVerticeOrigem) || !this.validaVertice(identificadorVerticeDestino)) {
+            return "Vertice Inexistente no grafo";
+        }
+        if (identificadorVerticeOrigem.equals(identificadorVerticeDestino)){
+            return "Os vertices informados são iguais";
+        }
+        
+        int verticeOrigem = this.posicaoDoVertice(identificadorVerticeOrigem);
+        int verticeDestino = this.posicaoDoVertice(identificadorVerticeDestino);
+        int[] vetorDeDistancias = new int[this.matrizDeAdjacencia.size()];
+        Boolean[] visitados = new Boolean[this.matrizDeAdjacencia.size()];
+        int[] path = new int[this.matrizDeAdjacencia.size()];
+        int verticeAtual = verticeOrigem;
+
+        for (int i = 0; i < path.length; i++) {
+            path[i] = -1;
+        }
+
+        //Iniciando vetor de distancias
+        for (int i = 0; i < vetorDeDistancias.length; i++) {
+            if (i == verticeOrigem) {
+                vetorDeDistancias[i] = 0;
+                continue;
+            }
+            vetorDeDistancias[i] = Integer.MAX_VALUE;
+        }
+
+        //Iniciando vetor de visitados
+        for (int i = 0; i < visitados.length; i++) {
+            visitados[i] = false;
+        }
+
+        //Quando o vetor de visitados nao possuir mais false, isso ira significar que nos ja teremos vasculhado todos os possiveis caminhos a partir de todos os vertices
+        while (this.contemFalse(visitados)) {
+            visitados[verticeAtual] = true;
+
+            //Quando ja tiver encontrado o vertice de destino
+            if (verticeAtual == verticeDestino) {
+                break;
+            }
+
+            //Primeiro for responsavel por atualizar os pesos de acordo com a menor distancia no vetor de distancias
+            for (int i = 0; i < this.matrizDeAdjacencia.get(verticeAtual).size(); i++) {
+                //Ignora o laco
+                if (i == verticeAtual) {
+                    continue;
+                }
+                //Checa se um dado vertice ainda nao visitado e adjacente ao vertice atual, possui uma distancia ate ele menor do que a ja existente
+                if ((visitados[i] == false) && (this.matrizDeAdjacencia.get(verticeAtual).get(i) != 0) && (vetorDeDistancias[i] > vetorDeDistancias[verticeAtual] + this.matrizDeAdjacencia.get(verticeAtual).get(i))) {
+                    vetorDeDistancias[i] = vetorDeDistancias[verticeAtual] + this.matrizDeAdjacencia.get(verticeAtual).get(i);
+                    path[i] = verticeAtual;
+                }
+            }
+
+            for (int i = 0; i < vetorDeDistancias.length; i++) {
+                if (visitados[i] == false) {
+                    verticeAtual = i;
+                    break;
+                }
+            }
+            //Segundo for responsavel por verificar qual o vertice que ainda nao foi visitado e que possui o menor peso entre os vertices nao visitados
+            for (int i = verticeAtual; i < vetorDeDistancias.length; i++) {
+                if (visitados[i] == false && vetorDeDistancias[i] < vetorDeDistancias[verticeAtual]) {
+                    verticeAtual = i;
+                }
+            }
+        }
+        
+        return this.tracarCaminho(vetorDeDistancias, path, verticeOrigem, verticeDestino);        
     }
 
     protected String tracarCaminhoParatodosOsVertices(int[] vetorDeDistancias, int[] path, int verticeOrigem) {
@@ -237,6 +310,7 @@ public abstract class Grafo {
                     construtorString.append("Nao ha caminho do vertice ").append(this.identificadoresVertices.get(verticeOrigem)).append(" até o vertice ").
                             append(this.identificadoresVertices.get(i)).append("\n");
                     break;
+                    //Verificando se o vertice atual ainda e diferente do de origem
                 } else if (path[verticeAtual] != verticeOrigem) {
                     caminhosInversos.add(path[verticeAtual]);
                     verticeAtual = path[verticeAtual];
@@ -245,9 +319,12 @@ public abstract class Grafo {
                     break;
                 }
             }
-
+            /*
+            Checando se o ultimo vertice do vetor é o vertice de origem, pois caso não seja, nao sera inserido o caminho no striong builder, per-
+            manecendo somente a mensagem de caminho inexistente
+             */
             if (caminhosInversos.get(caminhosInversos.size() - 1) == verticeOrigem) {
-                //Colocando a lista na ordem correta
+                //Colocando a lista na ordem correta e adicionando no StringBuilder
                 Collections.reverse(caminhosInversos);
                 for (int j = 0; j < caminhosInversos.size(); j++) {
                     if (j == caminhosInversos.size() - 1) {
@@ -263,9 +340,47 @@ public abstract class Grafo {
         }
         return construtorString.toString();
     }
+    
+    protected String tracarCaminho(int[] vetorDeDistancias, int[] path, int verticeOrigem,int verticeDestino){
+        //Formando o caminho do vertice de origem ate o de destino
+        StringBuilder construtorString = new StringBuilder();
+        //Salva os caminhos na ordem do ultimo para o de origem
+        ArrayList<Integer> caminhosInversos = new ArrayList<>();
+        int verticeAtual;
+        /*
+        Ira comecar a adicionar os vertice no vetor de tras pra frente, posteriormente colocando-os na ordem certa e adicionando
+        no StringBuilder
+         */
+        caminhosInversos.add(verticeDestino);
+        verticeAtual = verticeDestino;
+        while (true) {
+            //Verificando se o vertice atual nao possui antecessores, ou seja, nao tera como chegar no mesmo
+            if (path[verticeAtual] == -1) {
+                return "Nao a caminho entre os vertices especificados";
+                //Verificando se ja chegou no vertice de origem
+            } else if (path[verticeAtual] == verticeOrigem) {
+                caminhosInversos.add(verticeOrigem);
+                break;
+            }
+            verticeAtual = path[verticeAtual];
+            caminhosInversos.add(verticeAtual);
+        }
+        //Colocando a lista na ordem correta e adicionando no StringBuilder
+        Collections.reverse(caminhosInversos);
+        for (int j = 0; j < caminhosInversos.size(); j++) {
+            if (j == caminhosInversos.size() - 1) {
+                construtorString.append(this.identificadoresVertices.get(caminhosInversos.get(j)));
+                break;
+            }
+            construtorString.append(this.identificadoresVertices.get(caminhosInversos.get(j))).append(" => ");
+        }
+        construtorString.append("  | Distancia do vertice ").append(this.identificadoresVertices.get(verticeOrigem)).append(" ate o vertice ")
+                .append(this.identificadoresVertices.get(verticeDestino)).append(" é ").append(vetorDeDistancias[verticeDestino]).append("\n");
+        return construtorString.toString();
+    }
 
     //Metodo para verificar se existem vertices ainda nao visitados
-    public boolean contemFalse(Boolean[] vetorDeVisitados) {
+    private boolean contemFalse(Boolean[] vetorDeVisitados) {
         for (int i = 0; i < vetorDeVisitados.length; i++) {
             if (vetorDeVisitados[i] == false) {
                 return true;
