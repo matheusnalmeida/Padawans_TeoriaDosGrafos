@@ -17,7 +17,7 @@ import java.util.Stack;
  * @author Matheus Nunes
  */
 public class GrafoOrientado extends Grafo {
-
+      
     public GrafoOrientado() {
         super();
     }
@@ -289,5 +289,7 @@ public class GrafoOrientado extends Grafo {
         }
         return -1;
     }
+    
+    
 
 }

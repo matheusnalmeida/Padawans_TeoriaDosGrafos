@@ -15,8 +15,15 @@ import java.util.Queue;
  */
 public class GrafoNaoOrientado extends Grafo {
 
+     /*
+    Numero de arestas que saem do vertice de origem da busca em profundidade.
+    OBS: Esta variavel sera utilizada no metodo de busca de articulacao, sendo necessario iniciar a variavel de forma global para a mesma n ser resetada
+    */
+    private int arestasDeSaida;
+    
     public GrafoNaoOrientado() {
         super();
+        this.arestasDeSaida = 0;
     }
 
     @Override
@@ -115,6 +122,76 @@ public class GrafoNaoOrientado extends Grafo {
         } else {
             construtorString.append("O grafo nao e conexo e possui ").append(contadorDeElementosConexos).append(" elementos conexos");
             return construtorString.toString();
+        }
+    }
+    
+    //Algoritimo para retornar quais vertices sao articulacoes
+    public String buscaDeArticulacao() {
+        //StringBuilder para armazenar as informacoes e mostrar
+        StringBuilder construtor = new StringBuilder();
+        //Id que cada vertice ira receber. O mesmo representa a ordem que os vertices foram visitados na busca em profundidade
+        int id = 0;
+        //Vetor para armazenar o id de cada vertice
+        int[] idDosVertices = new int[this.matrizDeAdjacencia.size()];
+        //Vetor para armazenar o vertice de menor id que cada vertice consegue chegar
+        int[] menorId = new int[this.matrizDeAdjacencia.size()];
+        //Vetor de visitados
+        boolean[] visitados = new boolean[this.matrizDeAdjacencia.size()];
+        //Vetor de articulacoes
+        boolean[] vetorDeArticulacoes = new boolean[this.matrizDeAdjacencia.size()];
+
+        /*
+        O for sera utilizado principalmente com o objetivo de se verificar pontos de articulacoes em grafos que sejam desconexos,
+        sendo que nesses casos a busca iria iniciar de nos diferentes, consequentemente tendo nos raiz diferentes
+         */
+        for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+            if (visitados[i] == false) {
+                this.buscaEmProfundidadeArticulacao(i, i, -1, visitados, menorId, idDosVertices, vetorDeArticulacoes, id);
+                //Verificando se o vertice raiz atual, contem ou nao mais de um filho
+                if (arestasDeSaida > 1) {
+                    vetorDeArticulacoes[i] = true;
+                } else if (arestasDeSaida < 1) {
+                    vetorDeArticulacoes[i] = false;
+                }
+            }
+        }
+        for (int i = 0; i < vetorDeArticulacoes.length; i++) {
+            if (vetorDeArticulacoes[i] == true){
+                construtor.append(super.identificadoresVertices.get(i)).append(" ");
+            }
+        }
+        return construtor.toString();
+    }
+
+    //Busca em profundidade feita de forma recursiva para se achar os pontos de articulação
+    private void buscaEmProfundidadeArticulacao(int verticeRaiz, int verticeAtual, int verticeAnterior, boolean[] visitados, int[] menorId, int[] idDosVertices, boolean[] vetorDeArticulacoes, int id) {
+        if (verticeAnterior == verticeRaiz) {
+            arestasDeSaida++;
+        }
+        visitados[verticeAtual] = true;
+        menorId[verticeAtual] = id;
+        idDosVertices[verticeAtual] = id;
+        id++;
+
+        ArrayList<Integer> adjacentes = this.getAdjacentes(verticeAtual);
+        for (int i = 0; i < adjacentes.size(); i++) {
+            if (adjacentes.get(i) == verticeAnterior) {
+                continue;
+            }
+            //Realizando a busca atraves de cada adjacente
+            if (visitados[adjacentes.get(i)] == false) {
+                this.buscaEmProfundidadeArticulacao(verticeRaiz, adjacentes.get(i), verticeAtual, visitados, menorId, idDosVertices, vetorDeArticulacoes, id);
+                menorId[verticeAtual] = Math.min(menorId[verticeAtual], menorId[adjacentes.get(i)]);
+                //Ponto de articulacao atraves de uma ponte
+                if (idDosVertices[verticeAtual] < menorId[adjacentes.get(i)]) {
+                    vetorDeArticulacoes[verticeAtual] = true;
+                } //Achando articulacoes atraves de um ciclo
+                else if (idDosVertices[verticeAtual] == menorId[adjacentes.get(i)]) {
+                    vetorDeArticulacoes[verticeAtual] = true;
+                }
+            } else {
+                menorId[verticeAtual] = Math.min(menorId[verticeAtual], idDosVertices[adjacentes.get(i)]);
+            }
         }
     }
 
