@@ -6,6 +6,7 @@
 package Grafos_Package;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -122,4 +123,64 @@ public class GrafoOrientado extends Grafo {
             return construtorString.toString();
         }
     }
+
+    public String ordenacaoTopologica() {
+        //StringBuilder para armazenar as informacoes
+        StringBuilder construtor = new StringBuilder();
+        //Vetor para armazenar o grau de entrada de cada vertice baseado nas posicoes do vetor
+        int[] vetorDeGraus = new int[this.matrizDeAdjacencia.size()];
+        //Vetor par armazenar os vertices de acordo com sua ordem de dependencia
+        int[] vetorDeVerticeDependencias = new int[this.matrizDeAdjacencia.size()];
+
+        //Inicialmente sera contado o grau de entrada de cada vertice
+        for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+            for (int j = 0; j < this.matrizDeAdjacencia.get(i).size(); j++) {
+                if (this.matrizDeAdjacencia.get(i).get(j) >= 1) {
+                    vetorDeGraus[j]++;
+                }
+            }
+        }
+        /*
+        Entao sera iniciada a ordenacao topologica
+        É importante ressaltar que a ordenacao topologica ira pssar por todos os vertices ou ate que aconteca de nao existir vertices
+        com grau 0 no meio da busca
+         */
+        for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+            int verticeAtual = -1;
+            
+            //Retornando Primeiro Vertice com grau nulo
+            for (int j = 0; j < vetorDeGraus.length; j++) {
+                if (vetorDeGraus[j] == 0) {
+                    verticeAtual = j;
+                    break;
+                }
+            }
+            /*
+            Caso o vertice atual tenha valor -1, isso significa que nao a vertice de grau nulo a ser analisado, podendo assim a ordenacao
+            ser finalizada
+             */
+            if (verticeAtual == -1) {
+                return "Impossivel ser realizada a ordenacao topologica";
+            }
+
+            //Entao, caso exitsa um vertice com grau 0, o mesmo recebera valor -1 e os seus adjacentes terao o grau diminuido em 1S
+            ArrayList<Integer> adjacentes = this.getAdjacentes(verticeAtual);
+            vetorDeGraus[verticeAtual] = -1;
+            for (int j = 0; j < adjacentes.size(); j++) {
+                vetorDeGraus[adjacentes.get(j)]--;
+            }
+            vetorDeVerticeDependencias[i] = verticeAtual;
+        }
+        
+        //Passando as informacoes do vetor para o StringBuilder
+        for (int i = 0;i < vetorDeVerticeDependencias.length;i++){
+            if (i == vetorDeVerticeDependencias.length -1){
+                construtor.append(super.identificadoresVertices.get(vetorDeVerticeDependencias[i]));
+                break;
+            }
+            construtor.append(super.identificadoresVertices.get(vetorDeVerticeDependencias[i])).append(" => ");
+        }
+        return construtor.toString();
+    }
+
 }
