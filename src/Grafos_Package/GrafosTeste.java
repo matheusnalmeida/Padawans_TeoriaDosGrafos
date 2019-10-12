@@ -59,7 +59,8 @@ public class GrafosTeste {
                 System.out.println("1 - Cadastro De Novo Grafo \n2 - Adicionar Vertice \n3 - Remove Vertice \n4 - Adicionar Aresta \n5 - Remove Aresta"
                         + "\n6 - Retorna Adjacentes \n7 - Verificar Se o Grafo eh Regular \n8 - Verificar se o grafo eh completo"
                         + "\n9 - Verificar se o grafo eh conexo \n10 - Dikstra de um vertice para todos os outros "
-                        + "\n11 - Dikstra de um vertice para outro especifico  \n12 - Ordenacao Topologica  \n13 - Printar Grafo \n0 - Finaliza o programa");
+                        + "\n11 - Dikstra de um vertice para outro especifico  \n12 - Ordenacao Topologica  \n13 - Fortemente Conexo "
+                        + "\n14 - Printar Grafo \n0 - Finaliza o programa");
                 respostaMenuPrincipal = scan.nextInt();
                 switch (respostaMenuPrincipal) {
                     case (0):
@@ -155,10 +156,17 @@ public class GrafosTeste {
                             System.out.println("Vertices Ordenados Pela Ordenacao Topologica");
                             System.out.println(((GrafoOrientado) grafoAtual).ordenacaoTopologica());
                         }else{
-                            System.out.println("O metodo de ordenacao topologica so podera ser utilizado em grafos nao orientados");
+                            System.out.println("O metodo de ordenacao topologica so podera ser utilizado em grafos orientados");
                         }
                         break;
-                    case (13):
+                     case (13):
+                        if (grafoAtual instanceof GrafoOrientado){
+                            System.out.println(((GrafoOrientado) grafoAtual).fortementeConexo());
+                        }else{
+                            System.out.println("O metodo de componetes fortemente conexos so podera ser utilizado em grafos orientados");
+                        }
+                        break;
+                    case (14):
                         grafoAtual.printarGrafo();
                         break;
                     default:

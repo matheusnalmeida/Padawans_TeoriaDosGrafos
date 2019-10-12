@@ -7,8 +7,10 @@ package Grafos_Package;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.Queue;
+import java.util.Stack;
 
 /**
  *
@@ -135,7 +137,7 @@ public class GrafoOrientado extends Grafo {
         //Inicialmente sera contado o grau de entrada de cada vertice
         for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
             for (int j = 0; j < this.matrizDeAdjacencia.get(i).size(); j++) {
-                if (this.matrizDeAdjacencia.get(i).get(j) >= 1) {
+                if (this.matrizDeAdjacencia.get(i).get(j) != 0) {
                     vetorDeGraus[j]++;
                 }
             }
@@ -147,7 +149,7 @@ public class GrafoOrientado extends Grafo {
          */
         for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
             int verticeAtual = -1;
-            
+
             //Retornando Primeiro Vertice com grau nulo
             for (int j = 0; j < vetorDeGraus.length; j++) {
                 if (vetorDeGraus[j] == 0) {
@@ -171,16 +173,121 @@ public class GrafoOrientado extends Grafo {
             }
             vetorDeVerticeDependencias[i] = verticeAtual;
         }
-        
+
         //Passando as informacoes do vetor para o StringBuilder
-        for (int i = 0;i < vetorDeVerticeDependencias.length;i++){
-            if (i == vetorDeVerticeDependencias.length -1){
+        for (int i = 0; i < vetorDeVerticeDependencias.length; i++) {
+            if (i == vetorDeVerticeDependencias.length - 1) {
                 construtor.append(super.identificadoresVertices.get(vetorDeVerticeDependencias[i]));
                 break;
             }
             construtor.append(super.identificadoresVertices.get(vetorDeVerticeDependencias[i])).append(" => ");
         }
         return construtor.toString();
+    }
+    
+    //Metodo que ira retornar se o grafo é ou nao fortemente conexo, sendo que caso o mesmo nao seja, sera retornado o seus componentes fortemente conexos
+    public String fortementeConexo() {
+        //StringBuilder para armazenarmos as informacoes que irao ser retornadas
+        StringBuilder construtor = new StringBuilder();
+        //Invertendo Matriz        
+        int[][] matrizInversa = new int[this.matrizDeAdjacencia.size()][this.matrizDeAdjacencia.size()];
+        //Salvando a transposta da matriz de adjacencia na variavel matrizInversa
+        for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+            for (int j = 0; j < this.matrizDeAdjacencia.get(i).size(); j++) {
+                matrizInversa[i][j] = this.matrizDeAdjacencia.get(j).get(i);
+            }
+        }
+
+        //Criando vetor para armazenar os vertices de acordo com o valor de pos ordem
+        ArrayList<Integer> vetorDeVerticesPosOrdem = this.BuscaEmProfundidadeParaPosOrdem();
+
+        //Matriz para armazenar os componente conexos do grafo
+        ArrayList<ArrayList<Integer>> matrizDeComponentesFortementeConexos = new ArrayList<>();
+
+        /*
+        Realizando busca em profundidade na matriz com ordem inversa e 
+        armazenando os componentes fortemente conexos do grafo na matriz de componentes fortemente conexos
+         */
+        ArrayList<Integer> vetorDeExplorados = new ArrayList<>();
+        Stack<Integer> pilha = new Stack<>();
+        Boolean[] visitados = new Boolean[this.matrizDeAdjacencia.size()];
+        int vertice;
+        for (int i = 0; i < visitados.length; i++) {
+            visitados[i] = false;
+        }
+        while (super.contemFalse(visitados)) {
+            vertice = this.retornaVerticeNaoVisitadoComValorDePosOrdem(visitados, vetorDeVerticesPosOrdem);
+            visitados[vertice] = true;
+            pilha.push(vertice);
+            while (!pilha.empty()) {
+                for (int i = 0; i < matrizInversa[pilha.peek()].length; i++) {
+                    if ((matrizInversa[pilha.peek()][i] != 0 && visitados[i] != true)) {
+                        pilha.push(i);
+                        visitados[i] = true;
+                        i = 0;
+                    }
+                }
+                vetorDeExplorados.add(pilha.pop());
+            }
+            matrizDeComponentesFortementeConexos.add(vetorDeExplorados);
+            vetorDeExplorados = new ArrayList<>();
+        }
+        if (matrizDeComponentesFortementeConexos.size() == 1) {
+            return "O grafo é fortemente conexo";
+        } else {
+            construtor.append("Abaixo estao os componentes fortemente conexos do grafo").append("\n");
+            for(int i = 0; i < matrizDeComponentesFortementeConexos.size();i++){
+                construtor.append("Componente ").append(i+1).append(": ");
+                for (int j = 0; j < matrizDeComponentesFortementeConexos.get(i).size(); j++) {
+                    construtor.append(super.identificadoresVertices.get(matrizDeComponentesFortementeConexos.get(i).get(j))).append(" ");
+                }
+                construtor.append("\n");
+            }
+        }
+        return construtor.toString();
+    }
+
+    //Metodo para pegarmos o valor de pos ordem de cada vertice
+    private ArrayList<Integer> BuscaEmProfundidadeParaPosOrdem() {
+        ArrayList<Integer> vetorDeExplorados = new ArrayList<>();
+        Stack<Integer> pilha = new Stack<>();
+        Boolean[] visitados = new Boolean[this.matrizDeAdjacencia.size()];
+        int vertice;
+        for (int i = 0; i < visitados.length; i++) {
+            visitados[i] = false;
+        }
+        while (super.contemFalse(visitados)) {
+            vertice = super.getVerticeNaoVisitado(visitados);
+            visitados[vertice] = true;
+            pilha.push(vertice);
+            while (!pilha.empty()) {
+                for (int i = 0; i < this.matrizDeAdjacencia.get(pilha.peek()).size(); i++) {
+                    if ((this.matrizDeAdjacencia.get(pilha.peek()).get(i) != 0 && visitados[i] != true)) {
+                        pilha.push(i);
+                        visitados[i] = true;
+                        i = 0;
+                    }
+                }
+                vetorDeExplorados.add(pilha.pop());
+            }
+        }
+        
+        //Revertendo vetor para que o mesmo fique ordenado do maior para o menor de pos ordem
+        Collections.reverse(vetorDeExplorados);
+        return vetorDeExplorados;
+    }
+    
+    /*
+    Metodo responsavel por retornar o primeiro vertice nao visitado encontrado,
+    levando em consideracao o valor de pos ordem
+     */
+    private int retornaVerticeNaoVisitadoComValorDePosOrdem(Boolean[] visitados, ArrayList<Integer> vetorDeVerticesPosOrdem) {
+        for (int i = 0; i < visitados.length; i++) {
+            if (visitados[vetorDeVerticesPosOrdem.get(i)].equals(false)) {
+                return vetorDeVerticesPosOrdem.get(i);
+            }
+        }
+        return -1;
     }
 
 }

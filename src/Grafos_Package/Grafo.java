@@ -380,7 +380,7 @@ public abstract class Grafo {
     }
 
     //Metodo para verificar se existem vertices ainda nao visitados
-    private boolean contemFalse(Boolean[] vetorDeVisitados) {
+    protected boolean contemFalse(Boolean[] vetorDeVisitados) {
         for (int i = 0; i < vetorDeVisitados.length; i++) {
             if (vetorDeVisitados[i] == false) {
                 return true;
@@ -389,8 +389,20 @@ public abstract class Grafo {
         return false;
     }
 
+    //Retorna um determinado vertice que ainda nao foi visitado de acordo com o vetor de visitados passado como parametro
+    protected int getVerticeNaoVisitado(Boolean[] vetorDevisitados) {
+        int verticeNaoVisitado = -1;
+       for (int i = 0; i < vetorDevisitados.length; i++) {
+            if (vetorDevisitados[i].equals(false)) {
+                verticeNaoVisitado =  i;
+                break;
+            }
+        }
+        return verticeNaoVisitado;
+    }
+    
     //Retorna um determinado vertice que ainda nao foi explorado de acordo com o vetor de explorados passado como parametro
-    public int getVerticeNaoExplorado(ArrayList<Integer> vetorDeExplorados) {
+    protected int getVerticeNaoExplorado(ArrayList<Integer> vetorDeExplorados) {
         int verticeNaoVisitado = -1;
         for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
             if (!vetorDeExplorados.contains(i)) {
