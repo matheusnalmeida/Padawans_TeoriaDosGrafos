@@ -15,12 +15,12 @@ import java.util.Queue;
  */
 public class GrafoNaoOrientado extends Grafo {
 
-     /*
+    /*
     Numero de arestas que saem do vertice de origem da busca em profundidade.
     OBS: Esta variavel sera utilizada no metodo de busca de articulacao, sendo necessario iniciar a variavel de forma global para a mesma n ser resetada
-    */
+     */
     private int arestasDeSaida;
-    
+
     public GrafoNaoOrientado() {
         super();
         this.arestasDeSaida = 0;
@@ -71,7 +71,7 @@ public class GrafoNaoOrientado extends Grafo {
         int grauAtual = 0;
         for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
             //A variavel grau ira receber a quantidade de vertices adjacentes que o vertice atual possui
-             grauAtual = this.getAdjacentes(i).size();
+            grauAtual = this.getAdjacentes(i).size();
             //Caso grau do primeiro elemento seja -1 isso significa que estamos ainda no primeiro verticeAtual
             if (grauPrimeiroElemento == -1) {
                 grauPrimeiroElemento = grauAtual;
@@ -124,8 +124,9 @@ public class GrafoNaoOrientado extends Grafo {
             return construtorString.toString();
         }
     }
-    
+
     //Algoritimo para retornar quais vertices sao articulacoes
+    //Ideia utilizada e explicada no seguinte video: https://www.youtube.com/watch?v=aZXi1unBdJA&t=991s
     public String buscaDeArticulacao() {
         //StringBuilder para armazenar as informacoes e mostrar
         StringBuilder construtor = new StringBuilder();
@@ -156,7 +157,7 @@ public class GrafoNaoOrientado extends Grafo {
             }
         }
         for (int i = 0; i < vetorDeArticulacoes.length; i++) {
-            if (vetorDeArticulacoes[i] == true){
+            if (vetorDeArticulacoes[i] == true) {
                 construtor.append(super.identificadoresVertices.get(i)).append(" ");
             }
         }
@@ -195,4 +196,82 @@ public class GrafoNaoOrientado extends Grafo {
         }
     }
 
+    //Algoritimo utilizado para identificacao do(s) centro(s) do grafo
+    public String centroDoGrafo() {
+        if (!this.matrizDeAdjacencia.isEmpty()) {
+            StringBuilder construtor = new StringBuilder();
+            /*
+        A ideia sera inicialmente realizar uma busca em largura partindo de cada vertice para que se identifique 
+        o valor de excentricidade de cada vertice. O metodo responsavel por essa funcao sera o retornaExcentricidadeDoVertice.
+        OBS: O valor de excentricidade de um vertice, é a distancia ate o vertice mais longe do mesmo.
+             */
+            int[] vetorDeExcentricidades = new int[this.matrizDeAdjacencia.size()];
+            for (int i = 0; i < this.matrizDeAdjacencia.size(); i++) {
+                vetorDeExcentricidades[i] = this.retornaExcentricidadeDoVertice(i);
+            }
+
+            /*
+        Apos termos a excentricidade de cada vertice, somente sera necessario ver qual ou quais deles possui a menor excentricidade
+        e retornalo(s). Os vertices serao salvos no vetor de centro de grafos.
+             */
+            ArrayList<Integer> centrosDoGrafo = new ArrayList<>();
+            int menorExcentricidade = Integer.MAX_VALUE;
+            for (int i = 0; i < vetorDeExcentricidades.length; i++) {
+                if (vetorDeExcentricidades[i] < menorExcentricidade) {
+                    centrosDoGrafo.clear();
+                    centrosDoGrafo.add(i);
+                    menorExcentricidade = vetorDeExcentricidades[i];
+                } else if (vetorDeExcentricidades[i] == menorExcentricidade) {
+                    centrosDoGrafo.add(i);
+                }
+            }
+
+            //Formando mensagem de retorno do metodo
+            if (centrosDoGrafo.size() > 1) {
+                construtor.append("Os centros do grafo sao os vertices:").append("\n");
+            } else {
+                construtor.append("O centros do grafo é o vertice ");
+            }
+            for (int i = 0; i < centrosDoGrafo.size(); i++) {
+                construtor.append(this.identificadoresVertices.get(centrosDoGrafo.get(i))).append("\n");
+            }
+            return construtor.toString();
+        } else {
+            return "O grafo nao possui vertices";
+        }
+    }
+
+    //Metodo que ira realizar a busca em profundidade e retornar a excentricidade do vertice de inicio
+    private int retornaExcentricidadeDoVertice(int verticeDeInicio) {
+        Queue<Integer> fila = new LinkedList<>();
+        Boolean[] visitados = new Boolean[this.matrizDeAdjacencia.size()];
+
+        //A variavel vetorDeMenoresDistancias ira armazenar a menor distancia de cada vertice para o vertice que se iniciou a busca em largura
+        int[] vetorDeMenoresDistancias = new int[this.matrizDeAdjacencia.size()];
+        for (int i = 0; i < visitados.length; i++) {
+            visitados[i] = false;
+        }
+
+        visitados[verticeDeInicio] = true;
+        fila.add(verticeDeInicio);
+        while (!fila.isEmpty()) {
+            int elementoAtual = fila.poll();
+            for (int i = 0; i < this.matrizDeAdjacencia.get(elementoAtual).size(); i++) {
+                if (this.matrizDeAdjacencia.get(elementoAtual).get(i) != 0 && visitados[i] == false) {
+                    visitados[i] = true;
+                    fila.add(i);
+                    vetorDeMenoresDistancias[i] = vetorDeMenoresDistancias[elementoAtual] + 1;
+                }
+            }
+        }
+
+        //Entao apos a busca sera retornado a maior das menores distancias, que nesse caso sera o valor de excentricidade
+        int maiorDistancia = -1;
+        for (int i = 0; i < vetorDeMenoresDistancias.length; i++) {
+            if (vetorDeMenoresDistancias[i] > maiorDistancia) {
+                maiorDistancia = vetorDeMenoresDistancias[i];
+            }
+        }
+        return maiorDistancia;
+    }
 }

@@ -60,7 +60,7 @@ public class GrafosTeste {
                         + "\n6 - Retorna Adjacentes \n7 - Verificar Se o Grafo eh Regular \n8 - Verificar se o grafo eh completo"
                         + "\n9 - Verificar se o grafo eh conexo \n10 - Dikstra de um vertice para todos os outros "
                         + "\n11 - Dikstra de um vertice para outro especifico  \n12 - Ordenacao Topologica  \n13 - Fortemente Conexo "
-                        + "\n14 - Busca de articulacoes \n15 - Printar Grafo \n0 - Finaliza o programa");
+                        + "\n14 - Busca de articulacoes \n15 - Retornar Centros do grafo \n16 - Printar Grafo \n0 - Finaliza o programa");
                 respostaMenuPrincipal = scan.nextInt();
                 switch (respostaMenuPrincipal) {
                     case (0):
@@ -174,6 +174,13 @@ public class GrafosTeste {
                         }
                         break;
                     case (15):
+                        if (grafoAtual instanceof GrafoNaoOrientado){
+                            System.out.println(((GrafoNaoOrientado) grafoAtual).centroDoGrafo());
+                        }else{
+                            System.out.println("O metodo de centro do grafo so podera ser utilizado em grafos nao orientados");
+                        }
+                        break;
+                    case (16):
                         grafoAtual.printarGrafo();
                         break;
                     default:
