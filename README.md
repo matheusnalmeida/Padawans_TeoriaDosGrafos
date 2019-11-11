@@ -48,16 +48,16 @@ Ao ser executado pela primeira vez, o programa ira pedir para que o usuario info
 
 14 - Busca de articulações = Retorna os vértices que são articulações no grafo.
 
-15 - Retornar Centros do Grafo = Retorna o vértice no centr do grafo.
+15 - Retornar Centros do Grafo = Retorna o(s) vértice(s) no centro do grafo.
 
 16 - Retornar arvore geradora minima = Retorna a arvore geradora mínima de um determinado grafo.
 
-17 - Printar Grafo = Mostra ao usuario a matriz adjacencia do Grafo passsado.
+17 - Printar Grafo = Mostra ao usuário a matriz adjacencia do Grafo passsado.
 
 0 - Finaliza o Programa = Finaliza a execucao do programa.
 
 ## Créditos
-Abaixa está os links do responsável pela criação do programa.<br />
+Abaixo está os links dos responsáveis pela criação do programa.<br />
 -[Erik Danilo](https://github.com/ErikDCAlmeida)<br />
 -[Aldo Wanderley](https://github.com/Aldo-1)<br />
 -[Matheus Almeida](https://github.com/matheus-nunes-Unit)
