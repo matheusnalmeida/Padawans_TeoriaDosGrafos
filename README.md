@@ -1,7 +1,6 @@
 # Padawans_TeoriaDosGrafos
 Implementação de Grafos - Parte 1
 
-
 #### Versão do Java
 JDK VERSION = java 12.0.1 2019-04-16
 
@@ -43,6 +42,22 @@ Ao ser executado pela primeira vez, o programa ira pedir para que o usuario info
 
 11 - Dijkstra de um vertice para outro especifico = Permite o usuario saber o menor caminho entre dois vertices especificados.
 
-12 - Printar Grafo = Mostra ao usuario a matriz adjacencia do Grafo passsado.
+12 - Ordenação Topológica = Retorna a ordem dos vértices pelo qual passou a ordenação topológica.
+
+13 - Fortemente conexo = Retorna todos os componentes fortemente conexos.
+
+14 - Busca de articulações = Retorna os vértices que são articulações no grafo.
+
+15 - Retornar Centros do Grafo = Retorna o vértice no centr do grafo.
+
+16 - Retornar arvore geradora minima = Retorna a arvore geradora mínima de um determinado grafo.
+
+17 - Printar Grafo = Mostra ao usuario a matriz adjacencia do Grafo passsado.
 
 0 - Finaliza o Programa = Finaliza a execucao do programa.
+
+## Créditos
+Abaixa está os links do responsável pela criação do programa.<br />
+-[Erik Danilo](https://github.com/ErikDCAlmeida)<br />
+-[Aldo Wanderley](https://github.com/Aldo-1)<br />
+-[Matheus Almeida](https://github.com/matheus-nunes-Unit)
