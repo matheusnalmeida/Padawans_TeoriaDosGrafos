@@ -274,4 +274,63 @@ public class GrafoNaoOrientado extends Grafo {
         }
         return maiorDistancia;
     }
+
+    //Metodo que ira retornar a arvore geradora minima utilizando a tecnica de prim
+    public String prim() {
+        if (super.matrizDeAdjacencia.isEmpty()){
+            return "Grafo Vazio";
+        }
+        StringBuilder construtor = new StringBuilder();
+        construtor.append("Os vertices da arvore geradora minima são: ").append("\n");
+        for (int i = 0; i < super.identificadoresVertices.size(); i++) {
+            if (i == super.identificadoresVertices.size() - 1) {
+                construtor.append(super.identificadoresVertices.get(i)).append("\n");
+                break;
+            }
+            construtor.append(super.identificadoresVertices.get(i)).append(" | ");
+        }
+        construtor.append("Arestas da arvore geradora minima: ").append("\n");
+        boolean[] visitados = new boolean[super.matrizDeAdjacencia.size()];
+        int numero_vertices = super.matrizDeAdjacencia.size();
+        int numero_arestas = 0;
+        int[] numeros = new int[numero_vertices];
+        System.out.println("");
+        int coluna = 0;
+        int linha = 0;
+        visitados[0] = true;
+        //N = Vertices, N-1 = Arestas.
+        while (numero_arestas < numero_vertices - 1) {
+            int menor_numero = Integer.MAX_VALUE;
+            for (int i = 0; i < super.matrizDeAdjacencia.size(); i++) {
+                if (visitados[i]) {
+                    for (int j = 0; j < super.matrizDeAdjacencia.get(i).size(); j++) {
+                        if (visitados[j] == false && super.matrizDeAdjacencia.get(i).get(j) > 0) {
+                            if (menor_numero > super.matrizDeAdjacencia.get(i).get(j)) {
+                                menor_numero = super.matrizDeAdjacencia.get(i).get(j);
+                                linha = i;
+                                coluna = j;
+                            }
+                        }
+                    }
+                }
+            }
+
+            numeros[coluna] = menor_numero;
+            construtor.append(super.identificadoresVertices.get(linha)).append(" --- ").append(super.identificadoresVertices.get(coluna)).append(" = ").append(numeros[coluna]).append("\n");
+            visitados[coluna] = true;
+            numero_arestas++;
+        }
+
+        construtor.append("Soma dos pesos da arvore geradora minima: ").append(this.somarArvoreGeradoraMinima(numeros));
+        return construtor.toString();
+    }
+
+    //Metodo que ira somar todos os pesos das arestas da arvore geradora minima
+    private int somarArvoreGeradoraMinima(int[] numeros) {
+        int somar = 0;
+        for (int i = 0; i < numeros.length; i++) {
+            somar = numeros[i] + somar;
+        }
+        return somar;
+    }
 }
